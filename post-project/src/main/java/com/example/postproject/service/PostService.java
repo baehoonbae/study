@@ -3,6 +3,8 @@ package com.example.postproject.service;
 import com.example.postproject.domain.Post;
 import com.example.postproject.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -15,8 +17,8 @@ public class PostService {
     private final PostRepository postRepository;
 
     @Autowired
-    public PostService(PostRepository postRepository) {
-        this.postRepository = postRepository;
+    public PostService(PostRepository postRepository2) {
+        this.postRepository = postRepository2;
     }
 
     // 글 작성
@@ -25,19 +27,20 @@ public class PostService {
     }
 
     // 글 수정
-    public void editPost(long id, String texts, String password) {
+    public ResponseEntity<String> editPost(long id, String title, String texts, String password) {
         Post post = postRepository.findById(id);
         if (!post.getPassword().equals(password)) {
-            return;
+            return new ResponseEntity<>("Incorrect password", HttpStatus.UNAUTHORIZED);
         }
 
         post.setContent(texts);
+        post.setTitle(title);
 
         LocalDateTime now = LocalDateTime.now();
-        String formattedDate = now.format(DateTimeFormatter.ofPattern("yyyy-dd-mm HH:mm:ss"));
+        String formattedDate = now.format( DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss") );
         post.setUpdateDate(formattedDate);
 
-        postRepository.update(id, post);
+        return ResponseEntity.ok("Post edited successfully");
     }
 
     // 글 전체 조회
@@ -51,12 +54,13 @@ public class PostService {
     }
 
     // 글 삭제
-    public void deletePost(long id, String password) {
+    public ResponseEntity<String> deletePost(long id, String password) {
         Post post = postRepository.findById(id);
         if (!post.getPassword().equals(password)) {
-            return;
+            return new ResponseEntity<>("Incorrect password", HttpStatus.UNAUTHORIZED);
         }
 
         postRepository.delete(id);
+        return ResponseEntity.ok("Post edited successfully");
     }
 }
