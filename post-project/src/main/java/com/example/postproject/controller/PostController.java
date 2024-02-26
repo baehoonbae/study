@@ -3,6 +3,7 @@ package com.example.postproject.controller;
 import com.example.postproject.domain.Post;
 import com.example.postproject.service.PostService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -30,7 +31,7 @@ public class PostController {
     @PostMapping(value = "/post/write")
     public String writePost(Post post) {
         LocalDateTime now = LocalDateTime.now();
-        String formattedDate = now.format(DateTimeFormatter.ofPattern("yyyy-dd-mm HH:mm:ss"));
+        String formattedDate = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         post.setUpdateDate(formattedDate);
 
         postService.createPost(post);
@@ -42,19 +43,24 @@ public class PostController {
     public String showPost(@PathVariable long id, Model model) {
         model.addAttribute("post", postService.getPostById(id));
         return "content-page";
+
+        // Update
     }
 
-    // Update
-    @PostMapping(value = "/post/{id}")
-    public String updatePost(@PathVariable long id, Post post) {
-        postService.editPost(id, post.getContent(), post.getPassword());
-        return "redirect:/";
+    @GetMapping(value = "/post/{id}/edit")
+    public String updatePage(@PathVariable long id, Model model) {
+        model.addAttribute("post", postService.getPostById(id));
+        return "edit-page";
+    }
+
+    @PostMapping(value = "/post/{id}/edit")
+    public ResponseEntity<String> updatePost(@PathVariable long id, Post post) {
+        return postService.editPost(id, post.getTitle(), post.getContent(), post.getPassword());
     }
 
     // Delete
-    @PostMapping(value = "/post/delete/{id}")
-    public String deletePost(@PathVariable long id, Post post) {
-        postService.deletePost(id, post.getPassword());
-        return "redirect:/";
+    @PostMapping(value = "/post/{id}/delete")
+    public ResponseEntity<String> deletePost(@PathVariable long id, Post post) {
+        return postService.deletePost(id, post.getPassword());
     }
 }
