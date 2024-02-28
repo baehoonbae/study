@@ -11,15 +11,13 @@
 <div>
     <br/>
     <div align="center">
-        <form id="editForm" th:action="@{/post/{id}/edit(id=${post.id})}" method="post">
+        <form id="editForm" th:action="@{'/post/' + ${post?.id} + '/edit'}" method="post">
             <div class="form-group" align="left">
                 <label for="title">글 제목 : </label>
                 <input type="text" id="title" name="title" th:placeholder="${post.title}" width="400px">
                 <br/><br/>
                 <div th:text="'작성자 : ' + ${post.writer}"></div>
                 <br/>
-                <label for="password">비밀번호 : </label>
-                <input type="password" id="password" name="password" data-password="${post.password}" width="200px">
                 <br/><br/>
                 <label for="content">글 내용 : </label>
                 <br/><br/>
@@ -28,27 +26,6 @@
             </div>
             <button type="submit">완료</button>
         </form>
-    </div>
-</div>
-
-<!-- 모달 -->
-<div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="errorModalLabel"
-     aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="errorModalLabel">오류</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                비밀번호가 잘못되었습니다. 다시 시도해주세요.
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
-            </div>
-        </div>
     </div>
 </div>
 
@@ -62,27 +39,21 @@
            var postId = $('#editForm').attr('action').split('/')[2];
            var newTitle = $('#title').val();
            var newTexts = $('#content').val();
-           var enteredPassword = $('#password').val();
-
+           
            $.ajax({
                url: '/post/' + postId + '/edit',
                type: 'POST',
                data: {
                    id: postId,
                    title: newTitle,
-                   content: newTexts,
-                   password: enteredPassword
+                   content: newTexts
                },
                success: function(response) {
                    alert('게시물이 성공적으로 수정되었습니다.');
                    window.location.href = '/post/' + postId;
                },
                error: function(xhr, status, error) {
-                   if (xhr.status === 401) {
-                       alert('비밀번호가 일치하지 않습니다.')
-                   } else {
-                       alert('서버 오류가 발생했습니다.');
-                   }
+                   alert('서버 오류가 발생했습니다.');
                }
            });
            event.preventDefault(); // 기본 폼 제출 동작 중지
