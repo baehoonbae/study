@@ -3,10 +3,12 @@ package com.example.postproject.controller;
 import com.example.postproject.domain.Post;
 import com.example.postproject.service.PostService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -43,19 +45,29 @@ public class PostController {
     public String showPost(@PathVariable long id, Model model) {
         model.addAttribute("post", postService.getPostById(id));
         return "content-page";
-
-        // Update
     }
 
+    // Update
     @GetMapping(value = "/post/{id}/edit")
     public String updatePage(@PathVariable long id, Model model) {
         model.addAttribute("post", postService.getPostById(id));
         return "edit-page";
     }
 
+    @PostMapping(value = "/post/{id}/validate-password")
+    public ResponseEntity<String> validatePasswordAndRedirectToEditPage(@PathVariable long id, String password, RedirectAttributes redirectAttributes) {
+        if (postService.isPasswordCorrect(id, password)) {
+            redirectAttributes.addAttribute("id", id);
+            return ResponseEntity.ok().body("redirect:/post/{id}/edit");
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("redirect:/post/{id}"); // 비밀번호가 틀렸을 때 리다이렉트할 경로 지정
+        }
+    }
+
     @PostMapping(value = "/post/{id}/edit")
-    public ResponseEntity<String> updatePost(@PathVariable long id, Post post) {
-        return postService.editPost(id, post.getTitle(), post.getContent(), post.getPassword());
+    public ResponseEntity<String> updatePost(@PathVariable long id, String title, String content, String password) {
+        postService.editPost(id, title, content);
+        return ResponseEntity.ok().body("edit-page");
     }
 
     // Delete
