@@ -27,25 +27,20 @@ public class PostService {
     }
 
     // 글 수정
-    public ResponseEntity<String> editPost(long id, String title, String texts, String password) {
+    public void editPost(long id, String title, String texts) {
         Post post = postRepository.findById(id);
-        if (!post.getPassword().equals(password)) {
-            return new ResponseEntity<>("Incorrect password", HttpStatus.UNAUTHORIZED);
-        }
 
         post.setContent(texts);
         post.setTitle(title);
 
         LocalDateTime now = LocalDateTime.now();
-        String formattedDate = now.format( DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss") );
+        String formattedDate = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         post.setUpdateDate(formattedDate);
-
-        return ResponseEntity.ok("Post edited successfully");
     }
 
     // 글 전체 조회
     public List<Post> getAllPosts() {
-       return postRepository.findAll();
+        return postRepository.findAll();
     }
 
     // 특정 글 조회
@@ -55,12 +50,16 @@ public class PostService {
 
     // 글 삭제
     public ResponseEntity<String> deletePost(long id, String password) {
-        Post post = postRepository.findById(id);
-        if (!post.getPassword().equals(password)) {
-            return new ResponseEntity<>("Incorrect password", HttpStatus.UNAUTHORIZED);
+        if (isPasswordCorrect(id, password)) {
+            postRepository.delete(id);
+            return ResponseEntity.ok("Post deleted successfully");
         }
-
-        postRepository.delete(id);
-        return ResponseEntity.ok("Post edited successfully");
+        return new ResponseEntity<>("Incorrect password", HttpStatus.UNAUTHORIZED);
     }
+
+    public boolean isPasswordCorrect(Long id, String enteredPassword) {
+        Post post = postRepository.findById(id);
+        return post.getPassword().equals(enteredPassword);
+    }
+
 }
