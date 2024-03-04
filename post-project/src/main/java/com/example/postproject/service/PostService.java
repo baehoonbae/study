@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PostService {
@@ -17,8 +18,8 @@ public class PostService {
     private final PostRepository postRepository;
 
     @Autowired
-    public PostService(PostRepository postRepository2) {
-        this.postRepository = postRepository2;
+    public PostService(PostRepository postRepository) {
+        this.postRepository = postRepository;
     }
 
     // 글 작성
@@ -28,38 +29,56 @@ public class PostService {
 
     // 글 수정
     public void editPost(long id, String title, String texts) {
-        Post post = postRepository.findById(id);
+        Optional<Post> optionalPost = postRepository.findById(id);
 
-        post.setContent(texts);
-        post.setTitle(title);
+        if (optionalPost.isPresent()) {
+            Post post = optionalPost.get();
 
-        LocalDateTime now = LocalDateTime.now();
-        String formattedDate = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        post.setUpdateDate(formattedDate);
+            post.setContent(texts);
+            post.setTitle(title);
+
+            LocalDateTime now = LocalDateTime.now();
+            String formattedDate = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+            post.setUpdateDate(formattedDate);
+
+            postRepository.save(post);
+        } else {
+            throw new IllegalArgumentException("게시물이 존재하지 않습니다. id: " + id);
+        }
     }
 
     // 글 전체 조회
     public List<Post> getAllPosts() {
-        return postRepository.findAll();
+        return postRepository.findAllByOrderByIdDesc();
     }
 
     // 특정 글 조회
-    public Post getPostById(long id) {
+    public Optional<Post> getPostById(long id) {
         return postRepository.findById(id);
     }
 
     // 글 삭제
     public ResponseEntity<String> deletePost(long id, String password) {
-        if (isPasswordCorrect(id, password)) {
-            postRepository.delete(id);
-            return ResponseEntity.ok("Post deleted successfully");
+        Optional<Post> optionalPost = postRepository.findById(id);
+        if (optionalPost.isPresent()) {
+            Post post = optionalPost.get();
+            if (isPasswordCorrect(id, password)) {
+                postRepository.delete(post);
+                return ResponseEntity.ok("Post deleted successfully");
+            }
+            return new ResponseEntity<>("Incorrect password", HttpStatus.UNAUTHORIZED);
+        } else {
+            return new ResponseEntity<>("Post not found", HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>("Incorrect password", HttpStatus.UNAUTHORIZED);
+
     }
 
     public boolean isPasswordCorrect(Long id, String enteredPassword) {
-        Post post = postRepository.findById(id);
-        return post.getPassword().equals(enteredPassword);
+        Optional<Post> optionalPost = postRepository.findById(id);
+        if (optionalPost.isPresent()) {
+            Post post = optionalPost.get();
+            return post.getPassword().equals(enteredPassword);
+        }
+        return false;
     }
-
 }
