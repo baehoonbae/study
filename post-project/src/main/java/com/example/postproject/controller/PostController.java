@@ -43,14 +43,16 @@ public class PostController {
     // Read
     @GetMapping(value = "/post/{id}")
     public String showPost(@PathVariable long id, Model model) {
-        model.addAttribute("post", postService.getPostById(id));
+        Post post = postService.getPostById(id).orElse(null);
+        model.addAttribute("post", post);
         return "content-page";
     }
 
     // Update
     @GetMapping(value = "/post/{id}/edit")
     public String updatePage(@PathVariable long id, Model model) {
-        model.addAttribute("post", postService.getPostById(id));
+        Post post = postService.getPostById(id).orElse(null);
+        model.addAttribute("post", post);
         return "edit-page";
     }
 
