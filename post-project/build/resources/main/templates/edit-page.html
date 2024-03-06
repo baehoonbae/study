@@ -1,10 +1,43 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <title>게시판</title>
 </head>
 <body>
+<nav>글 수정 화면</nav>
+<div>
+    <br/>
+    <div align="center">
+        <form id="editForm" th:action="@{'/post/' + ${post?.id} + '/edit'}" method="post">
+            <div class="form-group" align="left">
+                <label for="title">글 제목 : </label>
+                <input type="text" id="title" name="title" th:placeholder="${post.title}" width="400px">
+                <br/><br/>
+                <div th:text="'작성자 : ' + ${post.writer}"></div>
+                <br/>
+                <br/><br/>
+                <label for="content">글 내용 : </label>
+                <br/><br/>
+                <textarea id="content" name="content" th:text="${post.content}"></textarea>
+                <br/><br/>
+            </div>
+            <div class="button-container">
+                <button type="button" id="cancelButton">취소</button>
+                <button type="submit">등록</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="/js/editPageFunc.js"></script>
 
 </body>
 </html>

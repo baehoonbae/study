@@ -2,11 +2,11 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="/css/style.css">
     <title>게시판</title>
-    <nav>글 쓰기 화면</nav>
 </head>
 <body>
+<nav>글 쓰기 화면</nav>
 <div>
     <br/>
     <div align="center">
@@ -25,9 +25,23 @@
                 <br/><br/>
                 <textarea id="content" name="content"></textarea>
             </div>
-            <button type="submit">완료</button>
+            <div class="button-container">
+                <button type="button" id="cancelButton">취소</button>
+                <button type="submit">등록</button>
+            </div>
         </form>
     </div>
 </div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#cancelButton').on('click', function(e) {
+            e.preventDefault(); // 기본 동작 중단
+            window.location.href = '/'; // 홈으로 이동
+        });
+    });
+</script>
+
 </body>
 </html>

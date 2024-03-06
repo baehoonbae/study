@@ -24,6 +24,7 @@ public class PostService {
 
     // 글 작성
     public void createPost(Post post) {
+        post.setViews(0);
         postRepository.save(post);
     }
 
@@ -54,7 +55,15 @@ public class PostService {
 
     // 특정 글 조회
     public Optional<Post> getPostById(long id) {
-        return postRepository.findById(id);
+        Optional<Post> optionalPost = postRepository.findById(id);
+        if (optionalPost.isPresent()) {
+            Post post = optionalPost.get();
+            post.setViews(post.getViews() + 1);
+            postRepository.save(post);
+            return optionalPost;
+        } else {
+            throw new IllegalArgumentException("게시물이 존재하지 않습니다. id: " + id);
+        }
     }
 
     // 글 삭제

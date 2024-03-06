@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name="posts")
+@Table(name = "posts")
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
@@ -28,4 +28,7 @@ public class Post {
 
     @Column(name = "updateDate")
     private String updateDate;
+
+    @Column(name = "views")
+    private int views;
 }
