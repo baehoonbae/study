@@ -3,36 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="/css/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <title>게시판</title>
+
 </head>
 <body>
+<div class="button-container">
+    <div class="left-buttons">
+
+    </div>
+    <div id="topButtons" class="right-buttons">
+        <a th:href="@{/post/join}" class="custom-link">회원 가입</a>
+        <button onclick="location.href='/post/login'">로그인</button>
+    </div>
+</div>
 <div>
     <br/>
-    <nav>홈 화면</nav>
-    <div class="button-container"><button onclick="location.href='/post/write'">글 작성</button></div>
+    <nav>훈 배</nav>
+    <div class="button-container">
+        <div class="left-buttons">
+            <button onclick="location.href='/'">전체 글</button>
+        </div>
+        <div class="right-buttons">
+            <button onclick="location.href='/post/write'">글 쓰기</button>
+        </div>
+    </div>
+    <br/>
+    <div>
+        <table border="1" align="center">
+            <thead align="center">
+            <tr>
+                <th width="120">번호</th>
+                <th width="700">제목</th>
+                <th width="100">글쓴이</th>
+                <th width="200">최근 수정일</th>
+                <th width="100">조회수</th>
+            </tr>
+            </thead>
+            <tbody align="center">
+            <tr th:each="post: ${posts}">
+                <td th:text="${post.id}"></td>
+                <td style="text-align: left;"><a th:href="@{/post/{id}(id=${post.id})}" th:text="${post.title}" class="custom-link"></a></td>
+                <td th:text="${post.writer}"></td>
+                <td th:text="${post.updateDate}"></td>
+                <td th:text="${post.views}"></td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="button-container">
+            <div class="left-buttons">
+                <button onclick="location.href='/'">전체 글</button>
+            </div>
+            <div class="right-buttons">
+                <button onclick="location.href='/post/write'">글 작성</button>
+            </div>
+        </div>
+    </div>
 </div>
-<br/>
-<div>
-    <table border="1" width="1100" align="center">
-        <thead>
-        <tr>
-            <th width="50">번호</th>
-            <th width="550">제목</th>
-            <th width="200">작성자</th>
-            <th width="200">최근 수정일</th>
-            <th width="200">조회수</th>
-        </tr>
-        </thead>
-        <tbody align="center">
-        <tr th:each="post: ${posts}">
-            <td th:text="${post.id}"></td>
-            <td><a th:href="@{/post/{id}(id=${post.id})}" th:text="${post.title}"></a></td>
-            <td th:text="${post.writer}"></td>
-            <td th:text="${post.updateDate}"></td>
-            <td th:text="${post.views}"></td>
-        </tr>
-        </tbody>
-    </table>
-</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('.custom-link').click(function() {
+            $(this).addClass('clicked');
+        });
+    });
+</script>
+
 </body>
 </html>

@@ -6,10 +6,12 @@
        });
 
        $('#editForm').submit(function(event){
+           // 새롭게 입력된 값들
            var postId = $('#editForm').attr('action').split('/')[2];
            var newTitle = $('#title').val();
            var newTexts = $('#content').val();
 
+           // 전송
            $.ajax({
                url: '/post/' + postId + '/edit',
                type: 'POST',

@@ -36,7 +36,9 @@ public class PostService {
             Post post = optionalPost.get();
 
             post.setContent(texts);
-            post.setTitle(title);
+            if (!title.isEmpty()) {
+                post.setTitle(title);
+            }
 
             LocalDateTime now = LocalDateTime.now();
             String formattedDate = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
