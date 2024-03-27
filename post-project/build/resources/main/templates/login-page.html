@@ -15,9 +15,6 @@
           display: inline-block;
           text-align: left;
         }
-        .error-message {
-          color: red;
-        }
     </style>
 </head>
 
@@ -29,7 +26,7 @@
     </div>
 
     <div align="center" class="container">
-        <form id="loginForm" action="/post/login" method="post">
+        <form id="loginForm" action="/login" method="post">
             <div class="input-box">
                 <label for="username"></label>
                 <input type="text" id="username" name="username" placeholder="아이디" required>
@@ -37,8 +34,6 @@
                 <label for="password"></label>
                 <input type="password" id="password" name="password" placeholder="비밀번호" required>
                 <br/><br/><br/>
-                <div id="usernameErrorMessage" class="error-message"></div>
-                <div id="passwordErrorMessage" class="error-message"></div>
             </div>
             <button type="submit">로그인</button>
         </form>

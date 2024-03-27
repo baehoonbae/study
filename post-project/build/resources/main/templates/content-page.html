@@ -13,8 +13,21 @@
 
     </div>
     <div id="topButtons" class="right-buttons">
-        <a th:href="@{/post/join}" class="custom-link">회원 가입</a>
-        <button onclick="location.href='/post/login'">로그인</button>
+        <!-- 로그아웃 상태 -->
+        <th:block th:unless="${isLoggedIn}">
+            <a th:href="@{/post/join}" class="custom-link">회원 가입</a>
+        </th:block>
+        <th:block th:unless="${isLoggedIn}">
+            <button onclick="location.href='/login'">로그인</button>
+        </th:block>
+
+        <!-- 로그인 상태 -->
+        <th:block>
+
+        </th:block>
+        <th:block th:if="${isLoggedIn}">
+            <button onclick="location.href='/logout'">로그아웃</button>
+        </th:block>
     </div>
 </div>
 <div>
@@ -46,6 +59,7 @@
                 <div class="right-buttons">
                     <button id="updateButton" data-action="update">수정</button>
                     <button id="deleteButton" data-action="delete">삭제</button>
+                    <button id="writeButton">글 쓰기</button>
                 </div>
             </div>
         </div>

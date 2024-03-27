@@ -2,6 +2,7 @@ package com.example.postproject.controller;
 
 import com.example.postproject.domain.Post;
 import com.example.postproject.service.PostService;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,9 @@ public class PostController {
     private final PostService postService;
 
     @GetMapping(value = {"", "/"})
-    public String home(Model model) {
+    public String home(Model model, HttpSession session) {
+        boolean isLoggedIn = session.getAttribute("username") != null;
+        model.addAttribute("isLoggedIn", isLoggedIn);
         model.addAttribute("posts", postService.getAllPosts());
         return "home";
     }
@@ -32,6 +35,8 @@ public class PostController {
 
     @PostMapping(value = "/post/write")
     public String writePost(Post post) {
+
+
         LocalDateTime now = LocalDateTime.now();
         String formattedDate = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         post.setUpdateDate(formattedDate);

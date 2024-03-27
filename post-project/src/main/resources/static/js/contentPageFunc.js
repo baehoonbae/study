@@ -30,6 +30,15 @@
         openModal();
     });
 
+    // 글 쓰기 버튼 클릭 시
+    $('#writeButton').click(function() {
+//        if (!isLoggedIn) {
+//            alert("권한이 없습니다.")
+//            return;
+//        }
+        window.location.href = '/post/write';
+    });
+
     // 모달에서 확인 버튼 클릭 시 처리하는 함수
     $('#confirmButton').click(function() {
         var postId = $('#contentForm').attr('action').split('/')[2];
